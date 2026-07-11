@@ -8,6 +8,9 @@
 #include <KLocalizedString>
 #include <KIconTheme>
 
+#ifdef Q_OS_ANDROID
+Q_DECL_EXPORT
+#endif
 int main(int argc, char *argv[])
 {
     KIconTheme::initTheme();

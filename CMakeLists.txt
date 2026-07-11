@@ -9,6 +9,7 @@ include(KDECMakeSettings)
 include(KDECompilerSettings NO_POLICY_SCOPE)
 include(ECMFindQmlModule)
 include(ECMQmlModule)
+include(ECMAddAndroidApk)
 
 find_package(Qt6 REQUIRED COMPONENTS
     Core
@@ -31,6 +32,8 @@ find_package(KF6 REQUIRED COMPONENTS
 ecm_find_qmlmodule(org.kde.kirigami REQUIRED)
 
 add_subdirectory(src)
+
+ecm_add_android_apk(gymlogger ANDROID_DIR ${CMAKE_CURRENT_SOURCE_DIR}/android)
 
 install(PROGRAMS gymlogger.desktop DESTINATION ${KDE_INSTALL_APPDIR})
 install(FILES src/icons/hicolor/scalable/apps/gymlogger.svg
