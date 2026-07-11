@@ -46,11 +46,10 @@ target_link_libraries(gymlogger
     Qt6::Sql
     KF6::I18n
     KF6::CoreAddons
-    KF6::IconThemes
 )
 
 if(NOT ANDROID)
-    target_link_libraries(gymlogger PRIVATE Qt6::Widgets)
+    target_link_libraries(gymlogger PRIVATE Qt6::Widgets  KF6::IconThemes)
 endif()
 
 install(TARGETS gymlogger ${KDE_INSTALL_TARGETS_DEFAULT_ARGS})

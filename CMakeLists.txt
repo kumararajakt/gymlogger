@@ -24,11 +24,11 @@ find_package(KF6 REQUIRED COMPONENTS
     Kirigami
     I18n
     CoreAddons
-    IconThemes
+
 )
 
 if(NOT ANDROID)
-    find_package(KF6 REQUIRED COMPONENTS QQC2DesktopStyle)
+    find_package(KF6 REQUIRED COMPONENTS QQC2DesktopStyle IconThemes)
     find_package(Qt6 REQUIRED COMPONENTS Widgets)
 endif()
 
