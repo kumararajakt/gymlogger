@@ -1,11 +1,14 @@
 import QtQuick
 import QtQuick.Controls
 import org.kde.kirigami as Kirigami
+import org.kde.tutorial
 
 Kirigami.ApplicationWindow {
     width: 400
     height: 700
     visible: true
+
+    property PlanModel planModel: PlanModel {}
 
     pageStack.initialPage: page1
 

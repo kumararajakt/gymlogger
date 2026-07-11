@@ -8,6 +8,10 @@ ecm_add_qml_module(gymlogger
 target_sources(gymlogger
     PRIVATE
     main.cpp
+    PlanModel.cpp
+    PlanModel.h
+    ExerciseModel.cpp
+    ExerciseModel.h
 )
 
 ecm_target_qml_sources(gymlogger
@@ -17,6 +21,7 @@ ecm_target_qml_sources(gymlogger
     qml/LogPage.qml
     qml/WorkoutPage.qml
     qml/WorkoutDetailPage.qml
+    qml/AddPlanPage.qml
     qml/ExerciseDb.js
 )
 

@@ -2,13 +2,14 @@ import QtQuick
 import QtQuick.Controls as Controls
 import QtQuick.Layouts
 import org.kde.kirigami as Kirigami
+import org.kde.tutorial
 import "ExerciseDb.js" as ExerciseDb
 
 Kirigami.Page {
     id: workoutPage
     padding: 0
 
-    property var exerciseModel: ListModel {}
+    property ExerciseModel exerciseModel: ExerciseModel {}
     property var bodyPartModel: ListModel {}
     property var equipmentModel: ListModel {}
     property string searchQuery: ""
@@ -17,8 +18,51 @@ Kirigami.Page {
     property bool canLoadMore: false
     property int pageLimit: 20
     property string nextCursor: ""
+    property bool selectMode: false
+    property var planWorkouts: []
 
-    title: "Workouts"
+    signal selectionDone(var selectedItems)
+
+    title: selectMode ? "Select Workouts" : "Workouts"
+
+    header: RowLayout {
+        width: parent.width
+        height: 50
+        visible: selectMode
+
+        Item { Layout.fillWidth: true }
+
+        Controls.Button {
+            text: "Done"
+            onClicked: {
+                            workoutPage.selectionDone(planWorkouts)
+                applicationWindow().pageStack.pop()
+            }
+        }
+    }
+
+    function isExerciseSelected(exerciseId) {
+        for (var i = 0; i < planWorkouts.length; i++) {
+            if (planWorkouts[i].exerciseId === exerciseId) return true
+        }
+        return false
+    }
+
+    function toggleExerciseSelection(exercise) {
+        var arr = []
+        var found = false
+        for (var i = 0; i < planWorkouts.length; i++) {
+            if (planWorkouts[i].exerciseId === exercise.exerciseId) {
+                found = true
+                continue
+            }
+            arr.push(planWorkouts[i])
+        }
+        if (!found) {
+            arr.push(exercise)
+        }
+        planWorkouts = arr
+    }
 
     function normalizeExercise(item) {
         return {
@@ -43,7 +87,7 @@ Kirigami.Page {
             exerciseModel.clear()
             var items = result.data || []
             for (var i = 0; i < items.length; i++) {
-                exerciseModel.append(normalizeExercise(items[i]))
+                exerciseModel.addExercise(normalizeExercise(items[i]))
             }
             canLoadMore = result.meta.hasNextPage === true
             nextCursor = result.meta.nextCursor || ""
@@ -65,7 +109,7 @@ Kirigami.Page {
         ExerciseDb.fetchExercises(params).then(function(result) {
             var items = result.data || []
             for (var i = 0; i < items.length; i++) {
-                exerciseModel.append(normalizeExercise(items[i]))
+                exerciseModel.addExercise(normalizeExercise(items[i]))
             }
             canLoadMore = result.meta.hasNextPage === true
             nextCursor = result.meta.nextCursor || ""
@@ -82,7 +126,7 @@ Kirigami.Page {
             exerciseModel.clear()
             var items = result || []
             for (var i = 0; i < items.length; i++) {
-                exerciseModel.append(normalizeExercise(items[i]))
+                exerciseModel.addExercise(normalizeExercise(items[i]))
             }
             canLoadMore = false
             exerciseGrid.positionViewAtBeginning()
@@ -312,8 +356,8 @@ Kirigami.Page {
                             anchors.fill: parent
                             cursorShape: Qt.PointingHandCursor
                             onClicked: {
-                                applicationWindow().pageStack.layers.push(Qt.resolvedUrl("WorkoutDetailPage.qml"), {
-                                    exercise: {
+                                if (selectMode) {
+                                    toggleExerciseSelection({
                                         exerciseId: model.exerciseId,
                                         name: model.name,
                                         gifUrl: model.gifUrl,
@@ -322,8 +366,40 @@ Kirigami.Page {
                                         secondaryMuscles: model.secondaryMuscles,
                                         equipments: model.equipments,
                                         instructions: model.instructions
-                                    }
-                                })
+                                    })
+                                } else {
+                                    applicationWindow().pageStack.push(Qt.resolvedUrl("WorkoutDetailPage.qml"), {
+                                        exercise: {
+                                            exerciseId: model.exerciseId,
+                                            name: model.name,
+                                            gifUrl: model.gifUrl,
+                                            bodyParts: model.bodyParts,
+                                            targetMuscles: model.targetMuscles,
+                                            secondaryMuscles: model.secondaryMuscles,
+                                            equipments: model.equipments,
+                                            instructions: model.instructions
+                                        }
+                                    })
+                                }
+                            }
+                        }
+
+                        Rectangle {
+                            visible: selectMode && isExerciseSelected(model.exerciseId)
+                            anchors.top: parent.top
+                            anchors.right: parent.right
+                            anchors.margins: 8
+                            width: 24
+                            height: 24
+                            radius: 12
+                            color: "#4caf50"
+
+                            Kirigami.Icon {
+                                anchors.centerIn: parent
+                                source: "checkmark"
+                                width: 14
+                                height: 14
+                                color: "white"
                             }
                         }
                     }
