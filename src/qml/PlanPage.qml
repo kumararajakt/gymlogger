@@ -26,30 +26,51 @@ Kirigami.Page {
 
         delegate: Controls.ItemDelegate {
             width: parent.width
-            onClicked: applicationWindow().pageStack.push(Qt.resolvedUrl("EditPlanPage.qml"), { planId: model.planId })
+            onClicked: applicationWindow().pageStack.push(Qt.resolvedUrl("EditPlanPage.qml"), {
+                planId: model.planId
+            })
 
-            contentItem: RowLayout {
+            contentItem: ColumnLayout {
                 width: parent.width
 
-                ColumnLayout {
+                RowLayout {
                     Layout.fillWidth: true
-                    Controls.Label {
-                        text: model.planName
-                        font.bold: true
-                        font.pixelSize: 15
-                        elide: Text.ElideRight
+
+                    ColumnLayout {
+                        Layout.fillWidth: true
+                        Controls.Label {
+                            text: model.planName
+                            font.bold: true
+                            font.pixelSize: 15
+                            elide: Text.ElideRight
+                        }
+
+                        Controls.Label {
+                            text: model.planWorkouts.length + " workout" + (model.planWorkouts.length !== 1 ? "s" : "") + " •" + model.reminderDays.join(", ") + " " + model.reminderTime
+                            elide: Text.ElideRight
+                        }
                     }
 
-                    Controls.Label {
-                        text: model.planWorkouts.length + " workout" + (model.planWorkouts.length !== 1 ? "s" : "") + " •" + model.reminderDays.join(", ") + " " + model.reminderTime
-                        elide: Text.ElideRight
+                    Controls.ToolButton {
+                        Layout.alignment: Qt.AlignRight | Qt.AlignVCenter
+                        // icon.name: "delete"
+                        text: '...'
+                        onClicked: planModel.removePlan(model.planId)
                     }
                 }
 
-                Controls.ToolButton {
-                    Layout.alignment: Qt.AlignRight | Qt.AlignVCenter
-                    icon.name: "delete"
-                    onClicked: planModel.removePlan(model.planId)
+                Controls.Button {
+                    text: "Start"
+                    Layout.fillWidth: true
+                    onClicked: {
+                        var workouts = [];
+                        for (var i = 0; i < model.planWorkouts.length; i++)
+                            workouts.push(model.planWorkouts[i]);
+                        applicationWindow().pageStack.push(Qt.resolvedUrl("ActiveWorkoutPage.qml"), {
+                            planName: model.planName,
+                            planWorkouts: workouts
+                        });
+                    }
                 }
             }
         }

@@ -23,6 +23,9 @@ ecm_target_qml_sources(gymlogger
     qml/WorkoutDetailPage.qml
     qml/AddPlanPage.qml
     qml/EditPlanPage.qml
+    qml/ActiveWorkoutPage.qml
+    qml/WorkoutPlanCard.qml
+    qml/PlanWorkoutUtils.js
     qml/ExerciseDb.js
 )
 

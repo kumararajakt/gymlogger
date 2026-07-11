@@ -2,6 +2,7 @@ import QtQuick
 import QtQuick.Controls as Controls
 import QtQuick.Layouts
 import org.kde.kirigami as Kirigami
+import "PlanWorkoutUtils.js" as PlanWorkoutUtils
 
 Kirigami.Page {
     id: editPlanPage
@@ -16,22 +17,30 @@ Kirigami.Page {
     property var reminderDays: []
     property string reminderTime: "08:00"
     property string planName: ""
+    property bool reminderEnabled: false
+
+    function setPlanWorkouts(items) {
+        planWorkouts = PlanWorkoutUtils.normalizeWorkoutList(items);
+    }
 
     Component.onCompleted: {
         var plan = planModel.getPlan(planId)
         if (plan.planName) {
             planName = plan.planName
-            planWorkouts = plan.planWorkouts ? plan.planWorkouts.slice() : []
+            setPlanWorkouts(plan.planWorkouts ? plan.planWorkouts.slice() : [])
             var days = plan.reminderDays
             reminderDays = days ? days.slice() : []
-            reminderTime = plan.reminderTime || "08:00"
+            reminderTime = plan.reminderTime || ""
+            reminderEnabled = days.length > 0
             nameField.text = planName
         }
     }
 
     function savePlan() {
-        if (planName.length === 0) return
-        planModel.updatePlan(planId, planName, planWorkouts, reminderDays, reminderTime)
+        if (planName.length === 0 || planWorkouts.length === 0) return
+        var days = reminderEnabled ? reminderDays : []
+        var time = reminderEnabled ? reminderTime : ""
+        planModel.updatePlan(planId, planName, planWorkouts, days, time)
         applicationWindow().pageStack.pop()
     }
 
@@ -96,10 +105,10 @@ Kirigami.Page {
                 Layout.fillWidth: true
                 Layout.leftMargin: 16
                 Layout.rightMargin: 16
-                spacing: 8
+                spacing: 12
 
                 RowLayout {
-                    Text {
+                    Controls.Label {
                         text: "Workouts"
                         font.bold: true
                         font.pixelSize: 13
@@ -107,61 +116,55 @@ Kirigami.Page {
                     }
                     Item { Layout.fillWidth: true }
                     Controls.Button {
-                        text: "+ Add"
-                        onClicked: applicationWindow().pageStack.push(Qt.resolvedUrl("WorkoutPage.qml"), {
+                        text: "+ Add Workout"
+                        onClicked: {
+                            var page = applicationWindow().pageStack.push(Qt.resolvedUrl("WorkoutPage.qml"), {
                             selectMode: true,
                             planWorkouts: planWorkouts
-                        })
+                            })
+
+                            page.selectionDone.connect(function (items) {
+                                setPlanWorkouts(items)
+                            })
+                        }
                     }
                 }
 
-                Text {
-                    text: planWorkouts.length === 0 ? "No workouts added yet" : planWorkouts.length + " workout" + (planWorkouts.length !== 1 ? "s" : "") + " selected"
+                Controls.Label {
+                    text:  "No workouts added yet"
                     font.pixelSize: 12
-                    color: planWorkouts.length === 0 ? "#bbb" : "#888"
+                    visible: planWorkouts.length === 0
                     Layout.bottomMargin: 4
                 }
 
                 Repeater {
                     model: planWorkouts
-                    RowLayout {
+
+                    WorkoutPlanCard {
                         Layout.fillWidth: true
-                        spacing: 8
-
-                        Rectangle {
-                            Layout.preferredWidth: 32
-                            Layout.preferredHeight: 32
-                            radius: 6
-                            color: Qt.rgba(0, 0, 0, 0.04)
-
-                            Image {
-                                anchors.fill: parent
-                                anchors.margins: 2
-                                source: modelData.gifUrl || ""
-                                fillMode: Image.PreserveAspectFit
-                                asynchronous: true
+                        workoutData: modelData
+                        workoutIndex: index
+                        onRemoveRequested: {
+                            var arr = []
+                            for (var i = 0; i < planWorkouts.length; i++) {
+                                if (i !== workoutIndex) arr.push(planWorkouts[i])
                             }
+                            planWorkouts = arr
                         }
-
-                        Text {
-                            text: modelData.name ? modelData.name.charAt(0).toUpperCase() + modelData.name.slice(1) : ""
-                            font.pixelSize: 13
-                            Layout.fillWidth: true
-                            elide: Text.ElideRight
-                            maximumLineCount: 1
+                        onFieldChanged: function(idx, fieldName, fieldValue) {
+                            var arr = planWorkouts.slice()
+                            var obj = {}
+                            for (var key in arr[idx])
+                                obj[key] = arr[idx][key]
+                            obj[fieldName] = fieldValue
+                            arr[idx] = obj
+                            planWorkouts = arr
                         }
-
-                        Controls.ToolButton {
-                            icon.name: "list-remove"
-                            implicitWidth: 28
-                            implicitHeight: 28
-                            onClicked: {
-                                var arr = []
-                                for (var i = 0; i < planWorkouts.length; i++) {
-                                    if (i !== index) arr.push(planWorkouts[i])
-                                }
-                                planWorkouts = arr
-                            }
+                        onReorderRequested: function(fromIdx, toIdx) {
+                            var arr = planWorkouts.slice()
+                            var item = arr.splice(fromIdx, 1)[0]
+                            arr.splice(toIdx, 0, item)
+                            planWorkouts = arr
                         }
                     }
                 }
@@ -183,16 +186,31 @@ Kirigami.Page {
                 Layout.rightMargin: 16
                 spacing: 10
 
-                Text {
-                    text: "Reminder"
-                    font.bold: true
-                    font.pixelSize: 13
-                    color: "#666"
+                RowLayout {
+                    Text {
+                        text: "Reminder"
+                        font.bold: true
+                        font.pixelSize: 13
+                        color: "#666"
+                    }
+                    Item { Layout.fillWidth: true }
+                    Controls.CheckBox {
+                        checked: reminderEnabled
+                        onCheckedChanged: {
+                            reminderEnabled = checked
+                            if (!checked) {
+                                reminderDays = []
+                                reminderTime = "08:00"
+                            }
+                        }
+                    }
                 }
 
                 Flow {
                     Layout.fillWidth: true
                     spacing: 6
+                    enabled: reminderEnabled
+                    opacity: enabled ? 1.0 : 0.4
 
                     Repeater {
                         model: ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"]
@@ -208,6 +226,8 @@ Kirigami.Page {
                 RowLayout {
                     spacing: 8
                     Layout.topMargin: 4
+                    enabled: reminderEnabled
+                    opacity: enabled ? 1.0 : 0.4
 
                     Text {
                         text: "Time"
@@ -263,7 +283,7 @@ Kirigami.Page {
                 Layout.rightMargin: 16
                 Layout.topMargin: 8
                 Layout.bottomMargin: 24
-                enabled: planName.length > 0
+                enabled: planName.length > 0 && planWorkouts.length > 0
                 onClicked: savePlan()
             }
         }
