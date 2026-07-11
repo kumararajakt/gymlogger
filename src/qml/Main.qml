@@ -7,6 +7,7 @@ Kirigami.ApplicationWindow {
     width: 400
     height: 700
     visible: true
+    title: "GymLogger"
 
     property PlanModel planModel: PlanModel {}
     property SessionModel sessionModel: SessionModel {}

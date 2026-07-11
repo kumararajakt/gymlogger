@@ -33,5 +33,7 @@ ecm_find_qmlmodule(org.kde.kirigami REQUIRED)
 add_subdirectory(src)
 
 install(PROGRAMS gymlogger.desktop DESTINATION ${KDE_INSTALL_APPDIR})
+install(FILES src/icons/hicolor/scalable/apps/gymlogger.svg
+    DESTINATION ${KDE_INSTALL_ICONDIR}/hicolor/scalable/apps)
 
 feature_summary(WHAT ALL INCLUDE_QUIET_PACKAGES FATAL_ON_MISSING_REQUIRED_PACKAGES)

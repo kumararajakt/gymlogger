@@ -1,7 +1,7 @@
 [Desktop Entry]
 Name=GymLogger
 Exec=gymlogger
-Icon=kde
+Icon=gymlogger
 Type=Application
 Terminal=false
 Categories=Utility
