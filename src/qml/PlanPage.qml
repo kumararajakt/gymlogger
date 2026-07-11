@@ -9,105 +9,48 @@ Kirigami.Page {
 
     title: "Plans"
 
-    header: RowLayout {
-        width: parent.width
-        height: 50
-
-        Item { Layout.fillWidth: true }
-
-        Controls.ToolButton {
+    actions: [
+        Kirigami.Action {
             icon.name: "list-add"
-            onClicked: applicationWindow().pageStack.push(Qt.resolvedUrl("AddPlanPage.qml"))
+            onTriggered: applicationWindow().pageStack.push(Qt.resolvedUrl("AddPlanPage.qml"))
         }
-    }
+    ]
 
     property var planModel: applicationWindow().planModel
 
     ListView {
+        id: planList
         anchors.fill: parent
         model: planModel
         clip: true
-        spacing: 0
-        visible: planModel.count > 0
 
-        delegate: Rectangle {
-            width: ListView.view.width
-            height: 80
-            color: "white"
-            border.color: Qt.rgba(0, 0, 0, 0.08)
-            border.width: 1
+        delegate: Controls.ItemDelegate {
+            width: parent.width
+            onClicked: applicationWindow().pageStack.push(Qt.resolvedUrl("EditPlanPage.qml"), { planId: model.planId })
 
-            RowLayout {
-                anchors.fill: parent
-                anchors.leftMargin: 16
-                anchors.rightMargin: 16
-                spacing: 12
-
-                Rectangle {
-                    Layout.preferredWidth: 44
-                    Layout.preferredHeight: 44
-                    radius: 22
-                    color: Qt.rgba(0.2, 0.6, 1.0, 0.1)
-
-                    Kirigami.Icon {
-                        anchors.centerIn: parent
-                        source: "view-calendar"
-                        width: 22
-                        height: 22
-                    }
-                }
+            contentItem: RowLayout {
+                width: parent.width
 
                 ColumnLayout {
                     Layout.fillWidth: true
-                    spacing: 2
-
-                    Text {
+                    Controls.Label {
                         text: model.planName
                         font.bold: true
                         font.pixelSize: 15
                         elide: Text.ElideRight
-                        maximumLineCount: 1
                     }
 
-                    Text {
-                        text: model.planWorkouts.length + " workout" + (model.planWorkouts.length !== 1 ? "s" : "")
-                        font.pixelSize: 12
-                        color: "#888"
-                    }
-
-                    RowLayout {
-                        spacing: 4
-                        visible: model.reminderDays.length > 0
-
-                        Kirigami.Icon {
-                            source: "notifications"
-                            width: 12
-                            height: 12
-                        }
-
-                        Text {
-                            text: model.reminderDays.join(", ") + (model.reminderTime.length > 0 ? "  " + model.reminderTime : "")
-                            font.pixelSize: 11
-                            color: "#666"
-                            elide: Text.ElideRight
-                            maximumLineCount: 1
-                        }
+                    Controls.Label {
+                        text: model.planWorkouts.length + " workout" + (model.planWorkouts.length !== 1 ? "s" : "") + " •" + model.reminderDays.join(", ") + " " + model.reminderTime
+                        elide: Text.ElideRight
                     }
                 }
 
                 Controls.ToolButton {
+                    Layout.alignment: Qt.AlignRight | Qt.AlignVCenter
                     icon.name: "delete"
                     onClicked: planModel.removePlan(model.planId)
                 }
-            }
-
-            Rectangle {
-                anchors.bottom: parent.bottom
-                anchors.left: parent.left
-                anchors.right: parent.right
-                height: 1
-                color: Qt.rgba(0, 0, 0, 0.06)
-                anchors.leftMargin: 72
             }
         }
     }
@@ -125,7 +68,7 @@ Kirigami.Page {
             color: "#ccc"
         }
 
-        Text {
+        Controls.Label {
             text: "No plans yet"
             font.pixelSize: 18
             font.bold: true
@@ -133,7 +76,7 @@ Kirigami.Page {
             Layout.alignment: Qt.AlignHCenter
         }
 
-        Text {
+        Controls.Label {
             text: "Create a workout plan to get started"
             font.pixelSize: 13
             color: "#bbb"

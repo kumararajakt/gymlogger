@@ -22,6 +22,7 @@ ecm_target_qml_sources(gymlogger
     qml/WorkoutPage.qml
     qml/WorkoutDetailPage.qml
     qml/AddPlanPage.qml
+    qml/EditPlanPage.qml
     qml/ExerciseDb.js
 )
 
@@ -32,6 +33,7 @@ target_link_libraries(gymlogger
     Qt6::Gui
     Qt6::QuickControls2
     Qt6::Widgets
+    Qt6::Sql
     KF6::I18n
     KF6::CoreAddons
     KF6::IconThemes
