@@ -17,7 +17,6 @@ find_package(Qt6 REQUIRED COMPONENTS
     Test
     Gui
     QuickControls2
-    Widgets
     Sql
 )
 
@@ -25,9 +24,13 @@ find_package(KF6 REQUIRED COMPONENTS
     Kirigami
     I18n
     CoreAddons
-    QQC2DesktopStyle
     IconThemes
 )
+
+if(NOT ANDROID)
+    find_package(KF6 REQUIRED COMPONENTS QQC2DesktopStyle)
+    find_package(Qt6 REQUIRED COMPONENTS Widgets)
+endif()
 
 ecm_find_qmlmodule(org.kde.kirigami REQUIRED)
 
