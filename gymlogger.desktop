@@ -1,0 +1,7 @@
+[Desktop Entry]
+Name=GymLogger
+Exec=gymlogger
+Icon=kde
+Type=Application
+Terminal=false
+Categories=Utility
