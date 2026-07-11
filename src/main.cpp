@@ -1,31 +1,41 @@
-#include <QApplication>
+#include <QGuiApplication>
 #include <QQmlApplicationEngine>
 #include <QtQml>
 #include <QUrl>
-#include <QQuickStyle>
 #include <QIcon>
 #include <KLocalizedContext>
 #include <KLocalizedString>
+
+#ifndef Q_OS_ANDROID
+#include <QApplication>
+#include <QQuickStyle>
 #include <KIconTheme>
+#endif
 
 #ifdef Q_OS_ANDROID
 Q_DECL_EXPORT
 #endif
 int main(int argc, char *argv[])
 {
+#ifndef Q_OS_ANDROID
     KIconTheme::initTheme();
     QApplication app(argc, argv);
+#else
+    QGuiApplication app(argc, argv);
+#endif
     KLocalizedString::setApplicationDomain("tutorial");
-    QApplication::setOrganizationName(QStringLiteral("KDE"));
-    QApplication::setOrganizationDomain(QStringLiteral("kde.org"));
-    QApplication::setApplicationName(QStringLiteral("GymLogger"));
-    QApplication::setDesktopFileName(QStringLiteral("gymlogger"));
+    QGuiApplication::setOrganizationName(QStringLiteral("KDE"));
+    QGuiApplication::setOrganizationDomain(QStringLiteral("kde.org"));
+    QGuiApplication::setApplicationName(QStringLiteral("GymLogger"));
+    QGuiApplication::setDesktopFileName(QStringLiteral("gymlogger"));
     app.setWindowIcon(QIcon::fromTheme(QStringLiteral("gymlogger")));
 
+#ifndef Q_OS_ANDROID
     QApplication::setStyle(QStringLiteral("breeze"));
     if (qEnvironmentVariableIsEmpty("QT_QUICK_CONTROLS_STYLE")) {
         QQuickStyle::setStyle(QStringLiteral("org.kde.desktop"));
     }
+#endif
 
     QQmlApplicationEngine engine;
 
