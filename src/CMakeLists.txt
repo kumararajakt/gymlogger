@@ -10,6 +10,8 @@ target_sources(gymlogger
     main.cpp
     PlanModel.cpp
     PlanModel.h
+    SessionModel.cpp
+    SessionModel.h
     ExerciseModel.cpp
     ExerciseModel.h
 )

@@ -9,6 +9,7 @@ Kirigami.ApplicationWindow {
     visible: true
 
     property PlanModel planModel: PlanModel {}
+    property SessionModel sessionModel: SessionModel {}
 
     pageStack.initialPage: page1
 

@@ -2,6 +2,7 @@ import QtQuick
 import QtQuick.Controls as Controls
 import QtQuick.Layouts
 import org.kde.kirigami as Kirigami
+import org.kde.tutorial
 
 Kirigami.Page {
     id: activeWorkoutPage
@@ -14,10 +15,13 @@ Kirigami.Page {
     property var currentWorkout: planWorkouts.length > 0 ? planWorkouts[currentWorkoutIndex] : ({})
 
     property var setStates: []
+    property var workoutSetStates: []
 
     property int elapsedSeconds: 0
     property bool timerRunning: false
     property bool onBreak: false
+
+    property var sessionModel: applicationWindow().sessionModel
 
     Timer {
         id: workoutTimer
@@ -36,6 +40,12 @@ Kirigami.Page {
         setStates = arr;
     }
 
+    function saveCurrentWorkoutState() {
+        var arr = workoutSetStates.slice();
+        arr[currentWorkoutIndex] = setStates.slice();
+        workoutSetStates = arr;
+    }
+
     function allSetsDone() {
         for (var i = 0; i < setStates.length; i++)
             if (!setStates[i].done) return false;
@@ -44,18 +54,57 @@ Kirigami.Page {
 
     function goNext() {
         if (currentWorkoutIndex < planWorkouts.length - 1) {
+            saveCurrentWorkoutState();
             currentWorkoutIndex++;
             currentWorkout = planWorkouts[currentWorkoutIndex];
-            initSets();
+            if (workoutSetStates.length > currentWorkoutIndex && workoutSetStates[currentWorkoutIndex])
+                setStates = workoutSetStates[currentWorkoutIndex].slice();
+            else
+                initSets();
         }
     }
 
     function goPrev() {
         if (currentWorkoutIndex > 0) {
+            saveCurrentWorkoutState();
             currentWorkoutIndex--;
             currentWorkout = planWorkouts[currentWorkoutIndex];
-            initSets();
+            if (workoutSetStates.length > currentWorkoutIndex && workoutSetStates[currentWorkoutIndex])
+                setStates = workoutSetStates[currentWorkoutIndex].slice();
+            else
+                initSets();
         }
+    }
+
+    function finishSession() {
+        saveCurrentWorkoutState();
+        timerRunning = false;
+
+        var sessionWorkouts = [];
+        for (var w = 0; w < planWorkouts.length; w++) {
+            var workout = planWorkouts[w];
+            var states = workoutSetStates.length > w ? workoutSetStates[w] : [];
+            var sets = [];
+            for (var s = 0; s < states.length; s++) {
+                sets.push({
+                    setNumber: s + 1,
+                    done: states[s].done,
+                    reps: states[s].reps
+                });
+            }
+            sessionWorkouts.push({
+                exerciseId: workout.exerciseId || "",
+                name: workout.name || "",
+                gifUrl: workout.gifUrl || "",
+                bodyParts: workout.bodyParts || "",
+                equipments: workout.equipments || "",
+                targetMuscles: workout.targetMuscles || "",
+                sets: sets
+            });
+        }
+
+        sessionModel.addSession(planName, sessionWorkouts, elapsedSeconds);
+        applicationWindow().pageStack.pop();
     }
 
     function completeAndAdvance() {
@@ -64,8 +113,7 @@ Kirigami.Page {
             arr.push({ done: true, reps: setStates[i].reps });
         setStates = arr;
         if (currentWorkoutIndex === planWorkouts.length - 1) {
-            timerRunning = false;
-            applicationWindow().pageStack.pop();
+            finishSession();
         } else {
             goNext();
         }
@@ -256,8 +304,7 @@ Kirigami.Page {
                     highlighted: true
                     onClicked: {
                         if (currentWorkoutIndex === planWorkouts.length - 1) {
-                            timerRunning = false;
-                            applicationWindow().pageStack.pop();
+                            finishSession();
                         } else {
                             goNext();
                         }
