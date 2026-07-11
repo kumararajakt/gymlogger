@@ -131,7 +131,7 @@ Kirigami.Page {
                 }
 
                 Controls.Label {
-                    text:  "No workouts added yet"
+                    text: "No workouts added yet"
                     font.pixelSize: 12
                     visible: planWorkouts.length === 0
                     Layout.bottomMargin: 4
@@ -180,90 +180,21 @@ Kirigami.Page {
                 color: Qt.rgba(0, 0, 0, 0.08)
             }
 
-            ColumnLayout {
-                Layout.fillWidth: true
-                Layout.leftMargin: 16
-                Layout.rightMargin: 16
-                spacing: 10
-
-                RowLayout {
-                    Text {
-                        text: "Reminder"
-                        font.bold: true
-                        font.pixelSize: 13
-                        color: "#666"
-                    }
-                    Item { Layout.fillWidth: true }
-                    Controls.CheckBox {
-                        checked: reminderEnabled
-                        onCheckedChanged: {
-                            reminderEnabled = checked
-                            if (!checked) {
-                                reminderDays = []
-                                reminderTime = "08:00"
-                            }
-                        }
+            ReminderSection {
+                reminderEnabled: editPlanPage.reminderEnabled
+                reminderDays: editPlanPage.reminderDays
+                reminderTime: editPlanPage.reminderTime
+                onReminderToggled: function(enabled) {
+                    editPlanPage.reminderEnabled = enabled
+                    if (!enabled) {
+                        editPlanPage.reminderDays = []
+                        editPlanPage.reminderTime = "08:00"
                     }
                 }
-
-                Flow {
-                    Layout.fillWidth: true
-                    spacing: 6
-                    enabled: reminderEnabled
-                    opacity: enabled ? 1.0 : 0.4
-
-                    Repeater {
-                        model: ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"]
-                        Controls.Button {
-                            text: modelData
-                            checkable: true
-                            checked: reminderDays.indexOf(modelData) >= 0
-                            onClicked: toggleDay(modelData)
-                        }
-                    }
+                onDayToggled: function(day) {
+                    editPlanPage.toggleDay(day)
                 }
-
-                RowLayout {
-                    spacing: 8
-                    Layout.topMargin: 4
-                    enabled: reminderEnabled
-                    opacity: enabled ? 1.0 : 0.4
-
-                    Text {
-                        text: "Time"
-                        font.pixelSize: 13
-                        color: "#666"
-                    }
-
-                    Controls.SpinBox {
-                        id: hourSpin
-                        from: 0
-                        to: 23
-                        value: parseInt(reminderTime.split(":")[0]) || 8
-                        onValueChanged: {
-                            var min = minuteSpin.value
-                            reminderTime = (value < 10 ? "0" : "") + value + ":" + (min < 10 ? "0" : "") + min
-                        }
-                    }
-
-                    Text {
-                        text: ":"
-                        font.pixelSize: 16
-                        font.bold: true
-                    }
-
-                    Controls.SpinBox {
-                        id: minuteSpin
-                        from: 0
-                        to: 59
-                        stepSize: 5
-                        value: parseInt(reminderTime.split(":")[1]) || 0
-                        onValueChanged: {
-                            var hr = hourSpin.value
-                            reminderTime = (hr < 10 ? "0" : "") + hr + ":" + (value < 10 ? "0" : "") + value
-                        }
-                    }
-                }
+                onReminderTimeChanged: editPlanPage.reminderTime = reminderTime
             }
 
             Rectangle {

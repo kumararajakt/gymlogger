@@ -35,7 +35,7 @@ Kirigami.Page {
         Controls.Button {
             text: "Done"
             onClicked: {
-                            workoutPage.selectionDone(planWorkouts)
+                workoutPage.selectionDone(planWorkouts)
                 applicationWindow().pageStack.pop()
             }
         }
@@ -272,135 +272,28 @@ Kirigami.Page {
                 model: exerciseModel
                 clip: true
 
-                delegate: Item {
-                    width: exerciseGrid.cellWidth
-                    height: exerciseGrid.cellHeight
-
-                    Rectangle {
-                        anchors.fill: parent
-                        anchors.margins: 4
-                        radius: 8
-                        color: "white"
-                        border.color: Qt.rgba(0, 0, 0, 0.1)
-                        border.width: 1
-
-                        ColumnLayout {
-                            anchors.fill: parent
-                            anchors.margins: 8
-                            spacing: 4
-
-                            Image {
-                                Layout.fillWidth: true
-                                Layout.fillHeight: true
-                                source: model.gifUrl || ""
-                                fillMode: Image.PreserveAspectFit
-                                asynchronous: true
-                                cache: true
-
-                                Controls.BusyIndicator {
-                                    anchors.centerIn: parent
-                                    running: parent.status === Image.Loading
-                                }
-                            }
-
-                            Text {
-                                Layout.fillWidth: true
-                                text: model.name ? model.name.charAt(0).toUpperCase() + model.name.slice(1) : ""
-                                font.bold: true
-                                font.pixelSize: 11
-                                wrapMode: Text.WordWrap
-                                maximumLineCount: 2
-                                elide: Text.ElideRight
-                                horizontalAlignment: Text.AlignHCenter
-                            }
-
-                            RowLayout {
-                                Layout.fillWidth: true
-                                spacing: 4
-                                Layout.alignment: Qt.AlignHCenter
-
-                                Rectangle {
-                                    radius: 4
-                                    color: Qt.rgba(0.2, 0.6, 1.0, 0.15)
-                                    Layout.preferredWidth: bodyPartLabel.implicitWidth + 12
-                                    Layout.preferredHeight: 18
-
-                                    Text {
-                                        id: bodyPartLabel
-                                        anchors.centerIn: parent
-                                        text: model.bodyParts ? model.bodyParts.charAt(0).toUpperCase() + model.bodyParts.slice(1) : ""
-                                        font.pixelSize: 9
-                                        color: "#1a73e8"
-                                    }
-                                }
-
-                                Rectangle {
-                                    radius: 4
-                                    color: Qt.rgba(0.0, 0.7, 0.3, 0.15)
-                                    Layout.preferredWidth: equipLabel.implicitWidth + 12
-                                    Layout.preferredHeight: 18
-                                    visible: model.equipments && model.equipments.length > 0
-
-                                    Text {
-                                        id: equipLabel
-                                        anchors.centerIn: parent
-                                        text: model.equipments ? model.equipments.charAt(0).toUpperCase() + model.equipments.slice(1) : ""
-                                        font.pixelSize: 9
-                                        color: "#0d7d3b"
-                                    }
-                                }
-                            }
-                        }
-
-                        MouseArea {
-                            anchors.fill: parent
-                            cursorShape: Qt.PointingHandCursor
-                            onClicked: {
-                                if (selectMode) {
-                                    toggleExerciseSelection({
-                                        exerciseId: model.exerciseId,
-                                        name: model.name,
-                                        gifUrl: model.gifUrl,
-                                        bodyParts: model.bodyParts,
-                                        targetMuscles: model.targetMuscles,
-                                        secondaryMuscles: model.secondaryMuscles,
-                                        equipments: model.equipments,
-                                        instructions: model.instructions
-                                    })
-                                } else {
-                                    applicationWindow().pageStack.push(Qt.resolvedUrl("WorkoutDetailPage.qml"), {
-                                        exercise: {
-                                            exerciseId: model.exerciseId,
-                                            name: model.name,
-                                            gifUrl: model.gifUrl,
-                                            bodyParts: model.bodyParts,
-                                            targetMuscles: model.targetMuscles,
-                                            secondaryMuscles: model.secondaryMuscles,
-                                            equipments: model.equipments,
-                                            instructions: model.instructions
-                                        }
-                                    })
-                                }
-                            }
-                        }
-
-                        Rectangle {
-                            visible: selectMode && isExerciseSelected(model.exerciseId)
-                            anchors.top: parent.top
-                            anchors.right: parent.right
-                            anchors.margins: 8
-                            width: 24
-                            height: 24
-                            radius: 12
-                            color: "#4caf50"
-
-                            Kirigami.Icon {
-                                anchors.centerIn: parent
-                                source: "checkmark"
-                                width: 14
-                                height: 14
-                                color: "white"
-                            }
+                delegate: ExerciseGridCard {
+                    exercise: ({
+                        exerciseId: model.exerciseId,
+                        name: model.name,
+                        gifUrl: model.gifUrl,
+                        bodyParts: model.bodyParts,
+                        targetMuscles: model.targetMuscles,
+                        secondaryMuscles: model.secondaryMuscles,
+                        equipments: model.equipments,
+                        instructions: model.instructions
+                    })
+                    cellWidth: exerciseGrid.cellWidth
+                    cellHeight: exerciseGrid.cellHeight
+                    selectMode: workoutPage.selectMode
+                    selected: isExerciseSelected(model.exerciseId)
+                    onClicked: {
+                        if (selectMode) {
+                            toggleExerciseSelection(exercise)
+                        } else {
+                            applicationWindow().pageStack.push(Qt.resolvedUrl("WorkoutDetailPage.qml"), {
+                                exercise: exercise
+                            })
                         }
                     }
                 }
