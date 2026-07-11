@@ -1,6 +1,7 @@
 import QtQuick
 import QtQuick.Controls as Controls
 import QtQuick.Layouts
+import org.kde.kirigami as Kirigami
 
 Rectangle {
     id: root
@@ -22,7 +23,7 @@ Rectangle {
             Layout.preferredWidth: 140
             Layout.preferredHeight: 140
             radius: 12
-            color: Qt.rgba(0, 0, 0, 0.04)
+            color: Qt.rgba(Kirigami.Theme.textColor.r, Kirigami.Theme.textColor.g, Kirigami.Theme.textColor.b, 0.04)
             clip: true
 
             Image {
@@ -57,7 +58,7 @@ Rectangle {
 
                 Rectangle {
                     radius: 4
-                    color: Qt.rgba(0.0, 0.7, 0.3, 0.12)
+                    color: Qt.rgba(Kirigami.Theme.positiveColor.r, Kirigami.Theme.positiveColor.g, Kirigami.Theme.positiveColor.b, 0.12)
                     Layout.preferredWidth: equipTag.implicitWidth + 12
                     Layout.preferredHeight: 20
 
@@ -66,7 +67,7 @@ Rectangle {
                         anchors.centerIn: parent
                         text: exercise.equipments ? exercise.equipments.charAt(0).toUpperCase() + exercise.equipments.slice(1) : ""
                         font.pixelSize: 10
-                        color: "#0d7d3b"
+                        color: Kirigami.Theme.positiveColor
                     }
                 }
             }
@@ -74,13 +75,13 @@ Rectangle {
             Text {
                 text: exercise.bodyParts ? exercise.bodyParts.charAt(0).toUpperCase() + exercise.bodyParts.slice(1) : ""
                 font.pixelSize: 12
-                color: "#888"
+                color: Kirigami.Theme.disabledTextColor
             }
 
             Text {
                 text: exercise.targetMuscles ? exercise.targetMuscles.charAt(0).toUpperCase() + exercise.targetMuscles.slice(1) : ""
                 font.pixelSize: 12
-                color: "#888"
+                color: Kirigami.Theme.disabledTextColor
             }
         }
     }

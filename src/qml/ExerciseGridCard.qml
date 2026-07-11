@@ -23,8 +23,8 @@ Item {
         anchors.fill: parent
         anchors.margins: 4
         radius: 8
-        color: "white"
-        border.color: Qt.rgba(0, 0, 0, 0.1)
+        color: Kirigami.Theme.backgroundColor
+        border.color: Kirigami.Theme.separatorColor
         border.width: 1
 
         ColumnLayout {
@@ -64,7 +64,7 @@ Item {
 
                 Rectangle {
                     radius: 4
-                    color: Qt.rgba(0.2, 0.6, 1.0, 0.15)
+                    color: Qt.rgba(Kirigami.Theme.highlightColor.r, Kirigami.Theme.highlightColor.g, Kirigami.Theme.highlightColor.b, 0.15)
                     Layout.preferredWidth: bodyPartLabel.implicitWidth + 12
                     Layout.preferredHeight: 18
 
@@ -73,13 +73,13 @@ Item {
                         anchors.centerIn: parent
                         text: exercise.bodyParts ? exercise.bodyParts.charAt(0).toUpperCase() + exercise.bodyParts.slice(1) : ""
                         font.pixelSize: 9
-                        color: "#1a73e8"
+                        color: Kirigami.Theme.highlightColor
                     }
                 }
 
                 Rectangle {
                     radius: 4
-                    color: Qt.rgba(0.0, 0.7, 0.3, 0.15)
+                    color: Qt.rgba(Kirigami.Theme.positiveColor.r, Kirigami.Theme.positiveColor.g, Kirigami.Theme.positiveColor.b, 0.15)
                     Layout.preferredWidth: equipLabel.implicitWidth + 12
                     Layout.preferredHeight: 18
                     visible: exercise.equipments && exercise.equipments.length > 0
@@ -89,7 +89,7 @@ Item {
                         anchors.centerIn: parent
                         text: exercise.equipments ? exercise.equipments.charAt(0).toUpperCase() + exercise.equipments.slice(1) : ""
                         font.pixelSize: 9
-                        color: "#0d7d3b"
+                        color: Kirigami.Theme.positiveColor
                     }
                 }
             }
@@ -109,7 +109,7 @@ Item {
             width: 24
             height: 24
             radius: 12
-            color: "#4caf50"
+            color: Kirigami.Theme.positiveColor
 
             Kirigami.Icon {
                 anchors.centerIn: parent

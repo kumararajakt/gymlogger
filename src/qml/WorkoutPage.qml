@@ -185,7 +185,7 @@ Kirigami.Page {
         Rectangle {
             Layout.fillWidth: true
             Layout.preferredHeight: 50
-            color: Qt.rgba(0, 0, 0, 0.05)
+            color: Qt.rgba(Kirigami.Theme.textColor.r, Kirigami.Theme.textColor.g, Kirigami.Theme.textColor.b, 0.05)
 
             RowLayout {
                 anchors.fill: parent
@@ -255,7 +255,7 @@ Kirigami.Page {
         Rectangle {
             Layout.fillWidth: true
             Layout.preferredHeight: 1
-            color: Qt.rgba(0, 0, 0, 0.1)
+            color: Kirigami.Theme.separatorColor
         }
 
         Item {
@@ -323,7 +323,7 @@ Kirigami.Page {
                 anchors.centerIn: parent
                 text: "No exercises found"
                 font.pixelSize: 16
-                color: "#999"
+                color: Kirigami.Theme.disabledTextColor
                 visible: !busy && exerciseModel.count === 0
             }
         }

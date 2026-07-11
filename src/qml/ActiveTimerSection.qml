@@ -1,6 +1,7 @@
 import QtQuick
 import QtQuick.Controls as Controls
 import QtQuick.Layouts
+import org.kde.kirigami as Kirigami
 
 ColumnLayout {
     id: root
@@ -25,7 +26,7 @@ ColumnLayout {
     Rectangle {
         Layout.fillWidth: true
         Layout.preferredHeight: 120
-        color: onBreak ? Qt.rgba(0.1, 0.6, 0.3, 0.08) : Qt.rgba(0, 0, 0, 0.03)
+        color: onBreak ? Qt.rgba(Kirigami.Theme.positiveColor.r, Kirigami.Theme.positiveColor.g, Kirigami.Theme.positiveColor.b, 0.08) : Qt.rgba(Kirigami.Theme.textColor.r, Kirigami.Theme.textColor.g, Kirigami.Theme.textColor.b, 0.03)
 
         ColumnLayout {
             anchors.centerIn: parent
@@ -35,7 +36,7 @@ ColumnLayout {
                 text: onBreak ? "BREAK" : "TIME"
                 font.pixelSize: 11
                 font.bold: true
-                color: onBreak ? "#4caf50" : "#999"
+                color: onBreak ? Kirigami.Theme.positiveColor : Kirigami.Theme.disabledTextColor
                 Layout.alignment: Qt.AlignHCenter
             }
 
@@ -44,7 +45,7 @@ ColumnLayout {
                 font.pixelSize: 48
                 font.bold: true
                 font.family: "Monospace"
-                color: onBreak ? "#4caf50" : "#333"
+                color: onBreak ? Kirigami.Theme.positiveColor : Kirigami.Theme.textColor
                 Layout.alignment: Qt.AlignHCenter
             }
 

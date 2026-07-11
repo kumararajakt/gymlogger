@@ -86,21 +86,21 @@ Kirigami.Page {
             Layout.preferredWidth: 64
             Layout.preferredHeight: 64
             Layout.alignment: Qt.AlignHCenter
-            color: "#ccc"
+            color: Kirigami.Theme.disabledTextColor
         }
 
         Controls.Label {
             text: "No plans yet"
             font.pixelSize: 18
             font.bold: true
-            color: "#999"
+            color: Kirigami.Theme.disabledTextColor
             Layout.alignment: Qt.AlignHCenter
         }
 
         Controls.Label {
             text: "Create a workout plan to get started"
             font.pixelSize: 13
-            color: "#bbb"
+            color: Kirigami.Theme.disabledTextColor
             Layout.alignment: Qt.AlignHCenter
         }
 

@@ -39,6 +39,8 @@ public:
                                int durationSeconds);
     Q_INVOKABLE void removeSession(int sessionId);
     Q_INVOKABLE QVariantMap getSession(int sessionId) const;
+    Q_INVOKABLE QVariantList getSessionsForDate(const QString &dateStr) const;
+    Q_INVOKABLE QStringList getDatesWithSessions() const;
 
     int count() const;
 

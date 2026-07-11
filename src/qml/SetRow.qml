@@ -1,6 +1,7 @@
 import QtQuick
 import QtQuick.Controls as Controls
 import QtQuick.Layouts
+import org.kde.kirigami as Kirigami
 
 RowLayout {
     id: root
@@ -24,14 +25,14 @@ RowLayout {
         text: "Set " + root.setNumber
         font.pixelSize: 14
         font.bold: true
-        color: root.done ? "#4caf50" : "#333"
+        color: root.done ? Kirigami.Theme.positiveColor : Kirigami.Theme.textColor
         Layout.preferredWidth: 60
     }
 
     Text {
         text: root.reps + " reps"
         font.pixelSize: 13
-        color: root.done ? "#aaa" : "#555"
+        color: root.done ? Kirigami.Theme.disabledTextColor : Kirigami.Theme.textColor
         Layout.fillWidth: true
     }
 

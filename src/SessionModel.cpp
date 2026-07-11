@@ -8,6 +8,7 @@
 #include <QJsonDocument>
 #include <QJsonObject>
 #include <QJsonArray>
+#include <QSet>
 #include <QDebug>
 
 SessionModel::SessionModel(QObject *parent)
@@ -19,9 +20,19 @@ SessionModel::SessionModel(QObject *parent)
 
 void SessionModel::initDatabase()
 {
+    QString path = QStandardPaths::writableLocation(QStandardPaths::AppDataLocation);
+    QDir().mkpath(path);
+    QString dbPath = path + QStringLiteral("/gymlogger.db");
+
     QSqlDatabase db = QSqlDatabase::database();
-    if (!db.isOpen())
-        return;
+    if (!db.isOpen()) {
+        db = QSqlDatabase::addDatabase(QStringLiteral("QSQLITE"));
+        db.setDatabaseName(dbPath);
+        if (!db.open()) {
+            qWarning() << "Failed to open database:" << db.lastError().text();
+            return;
+        }
+    }
 
     QSqlQuery query(db);
     query.exec(QStringLiteral(
@@ -181,4 +192,29 @@ QVariantMap SessionModel::getSession(int sessionId) const
 int SessionModel::count() const
 {
     return m_sessions.size();
+}
+
+QVariantList SessionModel::getSessionsForDate(const QString &dateStr) const
+{
+    QVariantList results;
+    for (const Session &session : m_sessions) {
+        if (session.dateTime.startsWith(dateStr)) {
+            results.append(QVariantMap{
+                {QStringLiteral("sessionId"), session.id},
+                {QStringLiteral("sessionPlanName"), session.planName},
+                {QStringLiteral("sessionWorkouts"), session.workouts},
+                {QStringLiteral("sessionDuration"), session.durationSeconds},
+                {QStringLiteral("sessionDateTime"), session.dateTime}
+            });
+        }
+    }
+    return results;
+}
+
+QStringList SessionModel::getDatesWithSessions() const
+{
+    QSet<QString> dates;
+    for (const Session &session : m_sessions)
+        dates.insert(session.dateTime.left(10));
+    return dates.values();
 }

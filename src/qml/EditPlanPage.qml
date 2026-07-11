@@ -80,7 +80,7 @@ Kirigami.Page {
                     text: "Plan Name"
                     font.bold: true
                     font.pixelSize: 13
-                    color: "#666"
+                    color: Kirigami.Theme.disabledTextColor
                 }
 
                 Controls.TextField {
@@ -98,7 +98,7 @@ Kirigami.Page {
                 Layout.bottomMargin: 16
                 Layout.leftMargin: 16
                 Layout.rightMargin: 16
-                color: Qt.rgba(0, 0, 0, 0.08)
+                color: Kirigami.Theme.separatorColor
             }
 
             ColumnLayout {
@@ -112,7 +112,7 @@ Kirigami.Page {
                         text: "Workouts"
                         font.bold: true
                         font.pixelSize: 13
-                        color: "#666"
+                        color: Kirigami.Theme.disabledTextColor
                     }
                     Item { Layout.fillWidth: true }
                     Controls.Button {
@@ -177,7 +177,7 @@ Kirigami.Page {
                 Layout.bottomMargin: 16
                 Layout.leftMargin: 16
                 Layout.rightMargin: 16
-                color: Qt.rgba(0, 0, 0, 0.08)
+                color: Kirigami.Theme.separatorColor
             }
 
             ReminderSection {
@@ -204,7 +204,7 @@ Kirigami.Page {
                 Layout.bottomMargin: 16
                 Layout.leftMargin: 16
                 Layout.rightMargin: 16
-                color: Qt.rgba(0, 0, 0, 0.08)
+                color: Kirigami.Theme.separatorColor
             }
 
             Controls.Button {

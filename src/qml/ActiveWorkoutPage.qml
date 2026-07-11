@@ -165,7 +165,7 @@ Kirigami.Page {
             Rectangle {
                 Layout.fillWidth: true
                 Layout.preferredHeight: 1
-                color: Qt.rgba(0, 0, 0, 0.08)
+                color: Kirigami.Theme.separatorColor
             }
 
             RowLayout {
@@ -179,7 +179,7 @@ Kirigami.Page {
                 Text {
                     text: "Workout " + (currentWorkoutIndex + 1) + " of " + planWorkouts.length
                     font.pixelSize: 12
-                    color: "#888"
+                    color: Kirigami.Theme.disabledTextColor
                 }
 
                 Item { Layout.fillWidth: true }
@@ -188,7 +188,7 @@ Kirigami.Page {
                     text: allSetsDone() ? "All sets complete!" : ""
                     font.pixelSize: 12
                     font.bold: true
-                    color: "#4caf50"
+                    color: Kirigami.Theme.positiveColor
                 }
             }
 
@@ -211,7 +211,7 @@ Kirigami.Page {
                 Layout.preferredHeight: 1
                 Layout.leftMargin: 16
                 Layout.rightMargin: 16
-                color: Qt.rgba(0, 0, 0, 0.08)
+                color: Kirigami.Theme.separatorColor
             }
 
             ColumnLayout {
@@ -225,7 +225,7 @@ Kirigami.Page {
                     text: "SETS"
                     font.pixelSize: 12
                     font.bold: true
-                    color: "#666"
+                    color: Kirigami.Theme.disabledTextColor
                 }
 
                 Repeater {
@@ -267,7 +267,7 @@ Kirigami.Page {
                 Layout.topMargin: 12
                 Layout.leftMargin: 16
                 Layout.rightMargin: 16
-                color: Qt.rgba(0, 0, 0, 0.08)
+                color: Kirigami.Theme.separatorColor
             }
 
             RowLayout {

@@ -32,6 +32,7 @@ ecm_target_qml_sources(gymlogger
     qml/SetRow.qml
     qml/ExerciseGridCard.qml
     qml/ReminderSection.qml
+    qml/CalendarGrid.qml
     qml/PlanWorkoutUtils.js
     qml/ExerciseDb.js
 )

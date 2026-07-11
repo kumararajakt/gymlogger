@@ -1,6 +1,7 @@
 import QtQuick
 import QtQuick.Controls as Controls
 import QtQuick.Layouts
+import org.kde.kirigami as Kirigami
 
 ColumnLayout {
     id: root
@@ -22,7 +23,7 @@ ColumnLayout {
             text: "Reminder"
             font.bold: true
             font.pixelSize: 13
-            color: "#666"
+            color: Kirigami.Theme.disabledTextColor
         }
         Item { Layout.fillWidth: true }
         Controls.CheckBox {
@@ -57,7 +58,7 @@ ColumnLayout {
         Text {
             text: "Time"
             font.pixelSize: 13
-            color: "#666"
+            color: Kirigami.Theme.disabledTextColor
         }
 
         Controls.SpinBox {

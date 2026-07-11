@@ -69,7 +69,7 @@ Kirigami.Page {
                     text: "Plan Name"
                     font.bold: true
                     font.pixelSize: 13
-                    color: "#666"
+                    color: Kirigami.Theme.disabledTextColor
                 }
 
                 Controls.TextField {
@@ -87,7 +87,7 @@ Kirigami.Page {
                 Layout.bottomMargin: 16
                 Layout.leftMargin: 16
                 Layout.rightMargin: 16
-                color: Qt.rgba(0, 0, 0, 0.08)
+                color: Kirigami.Theme.separatorColor
             }
 
             ColumnLayout {
@@ -101,7 +101,7 @@ Kirigami.Page {
                         text: "Workouts"
                         font.bold: true
                         font.pixelSize: 13
-                        color: "#666"
+                        color: Kirigami.Theme.disabledTextColor
                     }
                     Item {
                         Layout.fillWidth: true
@@ -124,7 +124,7 @@ Kirigami.Page {
                 Text {
                     text: planWorkouts.length === 0 ? "No workouts added yet" : planWorkouts.length + " workout" + (planWorkouts.length !== 1 ? "s" : "") + " selected"
                     font.pixelSize: 12
-                    color: planWorkouts.length === 0 ? "#bbb" : "#888"
+                    color: planWorkouts.length === 0 ? Kirigami.Theme.disabledTextColor : Kirigami.Theme.textColor
                     Layout.bottomMargin: 4
                 }
 
@@ -169,7 +169,7 @@ Kirigami.Page {
                 Layout.bottomMargin: 16
                 Layout.leftMargin: 16
                 Layout.rightMargin: 16
-                color: Qt.rgba(0, 0, 0, 0.08)
+                color: Kirigami.Theme.separatorColor
             }
 
             ReminderSection {
@@ -196,7 +196,7 @@ Kirigami.Page {
                 Layout.bottomMargin: 16
                 Layout.leftMargin: 16
                 Layout.rightMargin: 16
-                color: Qt.rgba(0, 0, 0, 0.08)
+                color: Kirigami.Theme.separatorColor
             }
 
             Controls.Button {

@@ -23,12 +23,19 @@ void PlanModel::initDatabase()
     QDir().mkpath(path);
     QString dbPath = path + QStringLiteral("/gymlogger.db");
 
-    QSqlDatabase db = QSqlDatabase::addDatabase(QStringLiteral("QSQLITE"));
-    db.setDatabaseName(dbPath);
+    QSqlDatabase db;
+    if (QSqlDatabase::contains()) {
+        db = QSqlDatabase::database();
+    } else {
+        db = QSqlDatabase::addDatabase(QStringLiteral("QSQLITE"));
+        db.setDatabaseName(dbPath);
+    }
 
-    if (!db.open()) {
-        qWarning() << "Failed to open database:" << db.lastError().text();
-        return;
+    if (!db.isOpen()) {
+        if (!db.open()) {
+            qWarning() << "Failed to open database:" << db.lastError().text();
+            return;
+        }
     }
 
     QSqlQuery query(db);
